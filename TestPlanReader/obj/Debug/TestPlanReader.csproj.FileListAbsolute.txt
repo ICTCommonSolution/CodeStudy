@@ -1,0 +1,8 @@
+D:\CodingProjects\CodingStudy\TestPlanReader\bin\Debug\TestPlanReader.dll
+D:\CodingProjects\CodingStudy\TestPlanReader\bin\Debug\TestPlanReader.pdb
+D:\CodingProjects\CodingStudy\TestPlanReader\bin\Debug\Newtonsoft.Json.dll
+D:\CodingProjects\CodingStudy\TestPlanReader\bin\Debug\Newtonsoft.Json.xml
+D:\CodingProjects\CodingStudy\TestPlanReader\obj\Debug\TestPlanReader.csprojAssemblyReference.cache
+D:\CodingProjects\CodingStudy\TestPlanReader\obj\Debug\TestPlanReader.csproj.CopyComplete
+D:\CodingProjects\CodingStudy\TestPlanReader\obj\Debug\TestPlanReader.dll
+D:\CodingProjects\CodingStudy\TestPlanReader\obj\Debug\TestPlanReader.pdb

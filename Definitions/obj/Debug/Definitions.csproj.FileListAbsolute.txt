@@ -1,0 +1,5 @@
+D:\CodingProjects\CodingStudy\Definitions\bin\Debug\Definitions.dll
+D:\CodingProjects\CodingStudy\Definitions\bin\Debug\Definitions.pdb
+D:\CodingProjects\CodingStudy\Definitions\obj\Debug\Definitions.csprojAssemblyReference.cache
+D:\CodingProjects\CodingStudy\Definitions\obj\Debug\Definitions.dll
+D:\CodingProjects\CodingStudy\Definitions\obj\Debug\Definitions.pdb

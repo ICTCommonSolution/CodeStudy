@@ -1,0 +1,18 @@
+﻿<Window x:Class="CodingStudy.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CodingStudy"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="103" Margin="26,35,0,0" Stroke="Black" VerticalAlignment="Top" Width="225"/>
+        <Button Content="Check Function in dll" HorizontalAlignment="Left" Height="34" Margin="52,89,0,0" VerticalAlignment="Top" Width="166" Click="Button_Click"/>
+        <TextBox x:Name="TextBox1" HorizontalAlignment="Left" Height="23" Margin="52,49,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="166"/>
+        <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="103" Margin="310,35,0,0" Stroke="Black" VerticalAlignment="Top" Width="225"/>
+        <TextBox Name="TextBox2" HorizontalAlignment="Left" Height="23" Margin="334,49,0,0" TextWrapping="Wrap" Text="Json file path" VerticalAlignment="Top" Width="184"/>
+        <Button Name="Button2" Content="Load Json TP" HorizontalAlignment="Left" Height="34" Margin="334,89,0,0" VerticalAlignment="Top" Width="184" Click="Button_Click_1"/>
+
+    </Grid>
+</Window>
