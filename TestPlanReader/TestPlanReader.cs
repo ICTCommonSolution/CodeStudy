@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,14 +10,76 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 
+//ToDo:
+//1. Add read section "Properties"
+//2. Add get a property from TP ojbect.
+//3. To verify the functions of get*** from TP object
+
 namespace CodingStudy
 {
     public class TPReader
     {
         string m_strFileName = string.Empty;
         TestPlan m_TP = new TestPlan();
+        Settings m_setting = new Settings();
+
         public TPReader() ////init a new file
         {
+            m_setting.Load(@"Settings.json");
+        }
+
+        public static bool ValidateTP(string fileName, out string errMessage)
+        {
+            errMessage = null;
+            try
+            {
+                if (true == System.IO.File.Exists(fileName))
+                {
+                }
+                else
+                    throw new Exception(string.Format("The file {0} does not exist", fileName));
+
+                StreamReader file = File.OpenText(fileName);
+                JsonTextReader reader = new JsonTextReader(file);
+                JObject joTP = (JObject)JToken.ReadFrom(reader);
+
+                JArray jarSe = (JArray)joTP["Sequence"];
+                for (int i = 0; i < jarSe.Count; i++)
+                {
+                    JObject joItem = (JObject)jarSe[i];
+                    if (false == joItem.ContainsKey("Name")
+                        || false == joItem.ContainsKey("FileName")
+                        || false == joItem.ContainsKey("Method"))
+                    {
+                        throw new Exception(string.Format("Some required tags are absent at {0}", joItem.ToString()));
+                    }
+                    if (joItem.ContainsKey("Input") && ((JObject)joItem["Input"]).Count < 1)
+                    {
+                        throw new Exception(string.Format("It's empty input at {0}", joItem.ToString()));
+                    }
+                    if (joItem.ContainsKey("Output") && ((JArray)joItem["Output"]).Count < 1)
+                    {
+                        JArray jarOutput = (JArray)joItem["Output"];
+                        for (int j = 0; j < jarOutput.Count; j++)
+                        {
+                            JObject joPoint = (JObject)jarOutput[j];
+                            if (false == joPoint.ContainsKey("ID")
+                                || false == joPoint.ContainsKey("Name"))
+                            {
+                                throw new Exception(string.Format("Some tags are absent with error message {0}", joPoint.ToString()));
+                            }
+                        }
+                    }
+                }
+                reader.Close();
+                file.Close();
+            }
+            catch (Exception ex)
+            {
+                errMessage = string.Format("It's not recogized TestPlan. The error message is {0}", ex.ToString());
+                return false;
+            }
+            return true;
         }
 
         public TPReader(string fileName)
@@ -33,6 +96,7 @@ namespace CodingStudy
                 StreamReader file = File.OpenText(m_strFileName);
                 JsonTextReader reader = new JsonTextReader(file);
                 JObject joTP = (JObject)JToken.ReadFrom(reader);
+
                 if(false == ReadFile(m_strFileName))
                 {
                     m_strFileName = string.Empty;
@@ -55,8 +119,9 @@ namespace CodingStudy
                 JsonTextReader reader = new JsonTextReader(file);
                 JObject joTP = (JObject)JToken.ReadFrom(reader);
 
-                JObject jo = (JObject)joTP.SelectToken("Sequence");
-                ParseSequecne(ref m_TP, (JObject)joTP["Sequence"]);
+                var jo = joTP["Sequence"];
+//                JObject jo = (JObject)joTP.SelectToken("Sequence");
+                ParseSequecne(ref m_TP, (JArray)jo);
             }
             catch (Exception ex)
             {
@@ -67,34 +132,59 @@ namespace CodingStudy
             return true;
         }
 
-        private void ParseSequecne(ref TestPlan tpSequence, JObject joSequence)
+        private void ParseSequecne(ref TestPlan tpSequence, JArray jarSequence)
         {
-            for (int i = 0; i < joSequence.Count; i++)
+            try
             {
-                Dictionary<string, object> dictInput = null;
-                Dictionary<string, object> dictOutput = null;
-                JObject joItem = (JObject)joSequence[i];
-                string strName = joItem["Name"].ToString();
-                string strFielName = joItem["FielName"].ToString();
-                string strMethod = joItem["Method"].ToString();
-                if (true == joItem.ContainsKey("Input"))
+                for (int i = 0; i < jarSequence.Count; i++)
                 {
-                    JObject joInput = (JObject)joItem["Input"];
-                    dictInput = ParseInputSection(joInput);
+                    Guid id = Guid.NewGuid();
+                    Dictionary<string, object> dictAnInput = new Dictionary<string, object>();
+                    ArrayList alOutput = null;
+                    JObject joItem = (JObject)jarSequence[i];
+
+                    if (false == joItem.ContainsKey(m_setting.SettingTags_TestName)
+                        || false == joItem.ContainsKey(m_setting.SettingTags_ResourceName)
+                        || false == joItem.ContainsKey(m_setting.SettingTags_MethodName))
+                    {
+                        throw new Exception(string.Format("Some required tags are absent at {0}", joItem.ToString()));
+                    }
+                    string strName = joItem[m_setting.SettingTags_TestName].ToString();
+                    string strFielName = joItem[m_setting.SettingTags_ResourceName].ToString();
+                    string strMethod = joItem[m_setting.SettingTags_MethodName].ToString();
+                    Dictionary<string, string> dictTestItem = new Dictionary<string, string>();
+                    dictTestItem.Add("GUID", id.ToString());
+                    dictTestItem.Add("Name", strName);
+                    dictTestItem.Add("Resouce", strFielName);
+                    dictTestItem.Add("Method", strMethod);
+                    tpSequence.TPList.Add(dictTestItem);
+
+                    if (true == joItem.ContainsKey(m_setting.SettingTags_Input))
+                    {
+                        JObject joInput = (JObject)joItem[m_setting.SettingTags_Input];
+                        dictAnInput = ParseInputSection(joInput);
+                        tpSequence.InputDict.Add(id.ToString(), dictAnInput);
+                    }
+                    else
+                    {
+                        //ToDo: recheck later, add null to dictionary?
+                    }
+                    if (true == joItem.ContainsKey(m_setting.SettingTags_Output))
+                    {
+                        JArray jarOutput = (JArray)joItem[m_setting.SettingTags_Output];
+
+                        alOutput = ParseOutputSection(jarOutput);
+                        tpSequence.OutputDict.Add(id.ToString(), alOutput);
+                    }
+                    else
+                    {
+                        //ToDo: recheck later, add null to dictionary?
+                    }
                 }
-                else
-                {
-                    //ToDo: recheck later, add null to dictionary?
-                }
-                if (true == joItem.ContainsKey("Output"))
-                {
-                    JObject joOutput = (JObject)joItem["Output"];
-                    dictOutput = ParseOutputSection(joOutput);
-                }
-                else
-                {
-                    //ToDo: recheck later, add null to dictionary?
-                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(string.Format("Error:{0}", ex.ToString()));
             }
         }
         private void ParseProperties(ref TestPlan tpSequence, JObject joProperties)
@@ -150,66 +240,86 @@ namespace CodingStudy
             }
         }
 
-        private List<object> ParseArray(JObject ArrayData)//, ref Dictionary<string, object> DataDict)
+        private ArrayList ParseOutputSection(JArray OutputSection)
         {
             try
             {
-                JArray ja = JArray.Parse(ArrayData.ToString());
-                List<object> listArray = new List<object>();
-                for (int i = 0; i < ja.Count; i++)
+                ArrayList alOutput = new ArrayList();
+                if (OutputSection.Count < 1) //no measure point assigned.
                 {
-                    JToken jt = JToken.Parse(ja[i].ToString());
                 }
-                foreach (JToken jt in ArrayData.Children())
+                else
                 {
-                    if (jt.Type == JTokenType.Array)
+                    Dictionary<string, Dictionary<string, object>> dictMeasGroup = new Dictionary<string, Dictionary<string, object>>();//<UniqueID,<name,value>>
+                    for (int i = 0; i < OutputSection.Count; ++i)  //遍历JArray
                     {
-                        listArray.Append(ParseArray((JObject)jt));
+                        JObject joPoint = JObject.Parse(OutputSection[i].ToString());
+                        Dictionary<string, object> dictPoint = new Dictionary<string, object>();
+                        //check if ID and Name present.
+                        if (false == joPoint.ContainsKey(m_setting.SettingTags_MeasPointID)
+                            || false == joPoint.ContainsKey(m_setting.SettingTags_MeasPointName))
+                        {
+                            throw new Exception(string.Format("Some tags are absent with error message {0}", joPoint.ToString()));
+                        }
+                        //get ID, get Name and add to dict
+                        string strID = joPoint[m_setting.SettingTags_MeasPointID].ToString();
+                        dictPoint.Add(m_setting.SettingTags_MeasPointName, joPoint[m_setting.SettingTags_MeasPointName].ToString());
+
+                        //get limit for the meas point, if neithor found, treat it as no verification
+                        if (true == joPoint.ContainsKey(m_setting.SettingTags_Limit1))//for compare rule: equal
+                        {
+                            dictPoint.Add(m_setting.SettingTags_Limit1, joPoint[m_setting.SettingTags_Limit1]);
+                        }
+                        if (true == joPoint.ContainsKey(m_setting.SettingTags_Limit2))//for high and low limits compare
+                        {
+                            dictPoint.Add(m_setting.SettingTags_Limit2, joPoint[m_setting.SettingTags_Limit2]);
+                        }
+
+                        //add the point to the group
+                        dictMeasGroup.Add(strID, dictPoint);//add the meas point to output dict
+                    }
+                    //add the group to arraylist
+                    alOutput.Add(dictMeasGroup);
+                }
+                return alOutput;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(string.Format("Error in parse output section:\"{0}\" with error message:{1}", OutputSection.ToString(), ex.Message));
+            }
+        }
+
+        private Dictionary<string, object> ParseInputSection(JObject Section)
+        {
+            try
+            {
+                Dictionary<string,object> dictInput = new Dictionary<string, object> ();
+                if (false == Section.HasValues)
+                {
+                    return null;
+                }
+                else
+                {
+                    foreach (JToken jt in Section.Children())
+                    {
+                        JProperty jp = (JProperty)jt;
+
+                        dictInput.Add(jp.Name, jp.Value);
+                    }
+
+                    if (dictInput.Count > 0)
+                    {
+                        return dictInput;
                     }
                     else
                     {
+                        return null;
                     }
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format("Error in ParseArrary with error message:{0}", ex.Message));
-            }
-        }
-
-        private Dictionary<string, object> ParseOutputSection(JObject OutputSection)
-        {
-            if (OutputSection.Count < 1) //no measure point assigned.
-            {
-                return null;
-            }
-            JArray jarOutput = JArray.Parse(OutputSection["Output"].ToString());
-            Dictionary<string, object> dictOutput = new Dictionary<string, object>();
-            for (int i = 0; i < jarOutput.Count; ++i)  //遍历JArray
-            {
-                JObject joPoint = JObject.Parse(jarOutput[i].ToString());
-                Dictionary<string, object> dictPoint = new Dictionary<string, object>();
-                string strID = joPoint["ID"].ToString();
-                dictPoint.Add("Name", joPoint["Name"].ToString());
-                locationitem._distance = joPoint["_distance"].ToString();
-            }
-            return ;
-        }
-        private Dictionary<string, object> ParseInputSection(JObject Section)
-        {
-            Dictionary<string, object> m_dictInput = null;
-            if (false == Section.HasValues)
-            {
-                return null;
-            }
-            else
-            {
-                m_dictInput = new Dictionary<string, object>();
-                //foreach (JToken jtSub in Section)
-                {
-                    //                    jtSub
-                }
-                return m_dictInput;
+                throw new Exception(string.Format("Error in parse input at \"{0}\" with message \"{1}\"", Section.ToString(), ex.ToString()));
             }
         }
     }
@@ -217,8 +327,8 @@ namespace CodingStudy
     public class TestPlan
     {
         public List<Dictionary<string, string>> TPList = null;
-        private Dictionary<string, Dictionary<string, object>> m_dictInput = null;
-        private Dictionary<string, Dictionary<string, object>> m_dictOutput = null;
+        public Dictionary<string, Dictionary<string, object>> InputDict = null;//<GUID,<Name,value>>
+        public Dictionary<string, ArrayList> OutputDict = null;//<GUID,[<MPID,<name,value>]>
         //  item1
         //  item2
         private Dictionary<string, string> m_dictAnItem = null;
@@ -226,17 +336,19 @@ namespace CodingStudy
         //          "Name":Test1            //test name shows on screen
         //          "File":abcd.dll         //the resource file
         //          "Method":edfg           //the method to run the test
-        private Dictionary<string, object> m_dictAnInput = null; //key is the GUID:1234-abcd-*-*    //unique id linked to the item
-        //Example:  "name1":300              // or a dictionary for multi-value as an input
-        //          "name2":true
-        private Dictionary<string, object> m_dictAnOutput = null; //key is the GUID "GUID":1234-abcd-*-*    //unique id linked to the item
-        //Example:  "point1"                // the name shows on screen
-        //          "limit1"                // the first limit. if the second is absent, use "=" to compare
+        private ArrayList m_alAnInput = null; //key is the GUID:1234-abcd-*-*    //unique id linked to the item
+        //Example:  300              // or a dictionary for multi-value as an input
+        //          true
+        //contains vairants of different types without names
+        private ArrayList m_alAnOutput = null; //key is the GUID "GUID":1234-abcd-*-*    //unique id linked to the item
+        //Example:  key:"pointID" value:               // the name shows on screen
+        //                              - key:"Name" value:"A test"
+
         public TestPlan()
         {
             TPList = new List<Dictionary<string, string>>();
-            m_dictInput = new Dictionary<string, Dictionary<string, object>>();
-            m_dictOutput = new Dictionary<string, Dictionary<string, object>>();
+            InputDict = new Dictionary<string, Dictionary<string, object>>();
+            OutputDict = new Dictionary<string, ArrayList>();
         }
 
         public Dictionary<string, string> GetAnItemByGUID(string GUID)
@@ -296,9 +408,9 @@ namespace CodingStudy
                 throw new Exception(string.Format("The TP list is null or empty."));
             }
 
-            if (true == m_dictInput.ContainsKey(GUID))
+            if (true == InputDict.ContainsKey(GUID))
             {
-                return m_dictInput[GUID];
+                return InputDict[GUID];
             }
             else
             {
@@ -306,23 +418,23 @@ namespace CodingStudy
             }
         }
 
-        public Dictionary<string, object> GetAnOutputByGUID(string GUID)
+        public ArrayList GetAnOutputByGUID(string GUID)
         {
             if (TPList == null || TPList.Count == 0)
             {
                 throw new Exception(string.Format("The TP list is null or empty."));
             }
 
-            if (true == m_dictOutput.ContainsKey(GUID))
+            if (true == OutputDict.ContainsKey(GUID))
             {
-                return m_dictOutput[GUID];
+                return OutputDict[GUID];
             }
             else
             {
                 return null;
             }
         }
-        public Dictionary<string, object> GetAnOutByName(string Name)
+        public Dictionary<string, string> GetAnMeasPointByName(string Name)//id or point name
         {
             if (TPList == null || TPList.Count == 0)
             {
@@ -331,19 +443,35 @@ namespace CodingStudy
 
             try
             {
-                foreach (KeyValuePair<string, Dictionary<string, object>> kvpAnOutput in m_dictOutput)
+                foreach (KeyValuePair<string, ArrayList> kvpAnOutput in OutputDict)
                 {
-                    if (true == Convert.ToString(kvpAnOutput.Value["Name"]).Equals(Name))
+                    ArrayList alMG = kvpAnOutput.Value;
+                    foreach (object obMG in alMG)
                     {
-                        return kvpAnOutput.Value;
+                        Dictionary<string, Dictionary<string, string>> dictAnOutput = (Dictionary<string, Dictionary<string, string>>)obMG;
+                        if (true == dictAnOutput.ContainsKey(Name))
+                        {
+                            return dictAnOutput[Name];
+                        }
+                        else
+                        {
+                            foreach (KeyValuePair<string, Dictionary<string, string>> kvp in dictAnOutput)
+                            {
+                                Dictionary<string, string> dictMP = kvp.Value;
+                                if (true == dictMP.ContainsValue(Name))
+                                {
+                                    return dictMP;
+                                }
+                            }
+                        }
                     }
                 }
+                return null;
             }
             catch (Exception ex)
             {
                 throw new Exception(string.Format("Error in get test item by name:{0} with error message {1}", Name, ex.Message));
             }
-            return null;
         }
     }
 }

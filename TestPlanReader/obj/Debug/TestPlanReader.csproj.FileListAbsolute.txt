@@ -6,3 +6,13 @@ D:\CodingProjects\CodingStudy\TestPlanReader\obj\Debug\TestPlanReader.csprojAsse
 D:\CodingProjects\CodingStudy\TestPlanReader\obj\Debug\TestPlanReader.csproj.CopyComplete
 D:\CodingProjects\CodingStudy\TestPlanReader\obj\Debug\TestPlanReader.dll
 D:\CodingProjects\CodingStudy\TestPlanReader\obj\Debug\TestPlanReader.pdb
+D:\1_Code\CodeStudy\TestPlanReader\obj\Debug\TestPlanReader.csprojAssemblyReference.cache
+D:\1_Code\CodeStudy\TestPlanReader\obj\Debug\TestPlanReader.dll
+D:\1_Code\CodeStudy\TestPlanReader\obj\Debug\TestPlanReader.pdb
+D:\1_Code\CodeStudy\TestPlanReader\bin\Debug\TestPlanReader.dll
+D:\1_Code\CodeStudy\TestPlanReader\bin\Debug\TestPlanReader.pdb
+D:\1_Code\CodeStudy\TestPlanReader\bin\Debug\Definitions.dll
+D:\1_Code\CodeStudy\TestPlanReader\bin\Debug\Newtonsoft.Json.dll
+D:\1_Code\CodeStudy\TestPlanReader\bin\Debug\Definitions.pdb
+D:\1_Code\CodeStudy\TestPlanReader\bin\Debug\Newtonsoft.Json.xml
+D:\1_Code\CodeStudy\TestPlanReader\obj\Debug\TestPlanReader.csproj.CopyComplete

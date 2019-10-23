@@ -3,3 +3,10 @@ D:\CodingProjects\CodingStudy\Definitions\bin\Debug\Definitions.pdb
 D:\CodingProjects\CodingStudy\Definitions\obj\Debug\Definitions.csprojAssemblyReference.cache
 D:\CodingProjects\CodingStudy\Definitions\obj\Debug\Definitions.dll
 D:\CodingProjects\CodingStudy\Definitions\obj\Debug\Definitions.pdb
+D:\1_Code\CodeStudy\Definitions\obj\Debug\Definitions.dll
+D:\1_Code\CodeStudy\Definitions\obj\Debug\Definitions.pdb
+D:\1_Code\CodeStudy\Definitions\bin\Debug\Definitions.dll
+D:\1_Code\CodeStudy\Definitions\bin\Debug\Definitions.pdb
+D:\1_Code\CodeStudy\Definitions\bin\Debug\Newtonsoft.Json.dll
+D:\1_Code\CodeStudy\Definitions\bin\Debug\Newtonsoft.Json.xml
+D:\1_Code\CodeStudy\Definitions\obj\Debug\Definitions.csproj.CopyComplete

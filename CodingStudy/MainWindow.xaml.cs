@@ -34,7 +34,6 @@ namespace CodingStudy
             {
                 DllStudy ds = new DllStudy(obj.FileName);
 
-
                 if (true == ds.FunctionExists(TextBox1.Text))
                 {
                     MessageBox.Show(string.Format("The function {0} exists in Dll {1}", TextBox1.Text, obj.FileName));
@@ -44,9 +43,19 @@ namespace CodingStudy
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            if (false == System.IO.File.Exists(TextBox2.Text))
-                return;
-            TPReader tpr = new TPReader(TextBox2.Text);
+            try
+            {
+                if (false == System.IO.File.Exists(TextBox2.Text))
+                    return;
+                TPReader tpr = new TPReader(TextBox2.Text);
+                string strErr = string.Empty;
+                if (false == TPReader.ValidateTP(TextBox2.Text, out strErr))
+                {
+                    MessageBox.Show(string.Format("It's not a valid test plan. error message is \"{0}\"", strErr));
+                }
+            }
+            catch (Exception ex)
+            { }
         }
     }
 

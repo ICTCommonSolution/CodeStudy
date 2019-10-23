@@ -51,6 +51,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Documents\Settings.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -60,4 +61,9 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ProjectExtensions />
+  <PropertyGroup>
+    <PostBuildEvent>XCopy "$(ProjectDir)Documents\*.json" "$(SolutionDir)$(SolutionName)\bin\$(ConfigurationName)\"
+XCopy "$(ProjectDir)*.dll" "$(SolutionDir)$(SolutionName)\bin\$(ConfigurationName)\"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

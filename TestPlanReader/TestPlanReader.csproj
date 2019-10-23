@@ -50,5 +50,14 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Definitions\Definitions.csproj">
+      <Project>{a86dde35-0ff0-449a-8339-711513e32c12}</Project>
+      <Name>Definitions</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>Copy "$(ProjectDir)*.dll" "$(SolutionDir)$(SolutionName)\bin\$(ConfigurationName)\"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

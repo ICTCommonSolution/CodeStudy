@@ -12,3 +12,17 @@ D:\CodingProjects\CodingStudy\LoadSettings\obj\Debug\LoadSettings.dll
 D:\CodingProjects\CodingStudy\LoadSettings\obj\Debug\LoadSettings.pdb
 D:\CodingProjects\CodingStudy\LoadSettings\bin\Debug\Definitions.dll
 D:\CodingProjects\CodingStudy\LoadSettings\bin\Debug\Definitions.pdb
+D:\1_Code\CodeStudy\LoadSettings\bin\Debug\LoadSettings.dll
+D:\1_Code\CodeStudy\LoadSettings\bin\Debug\LoadSettings.pdb
+D:\1_Code\CodeStudy\LoadSettings\bin\Debug\Definitions.dll
+D:\1_Code\CodeStudy\LoadSettings\bin\Debug\Newtonsoft.Json.Bson.dll
+D:\1_Code\CodeStudy\LoadSettings\bin\Debug\Newtonsoft.Json.dll
+D:\1_Code\CodeStudy\LoadSettings\bin\Debug\Definitions.pdb
+D:\1_Code\CodeStudy\LoadSettings\bin\Debug\Newtonsoft.Json.pdb
+D:\1_Code\CodeStudy\LoadSettings\bin\Debug\Newtonsoft.Json.xml
+D:\1_Code\CodeStudy\LoadSettings\bin\Debug\Newtonsoft.Json.Bson.pdb
+D:\1_Code\CodeStudy\LoadSettings\bin\Debug\Newtonsoft.Json.Bson.xml
+D:\1_Code\CodeStudy\LoadSettings\obj\Debug\LoadSettings.csprojAssemblyReference.cache
+D:\1_Code\CodeStudy\LoadSettings\obj\Debug\LoadSettings.csproj.CopyComplete
+D:\1_Code\CodeStudy\LoadSettings\obj\Debug\LoadSettings.dll
+D:\1_Code\CodeStudy\LoadSettings\obj\Debug\LoadSettings.pdb

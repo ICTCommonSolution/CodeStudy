@@ -3,3 +3,7 @@ D:\CodingProjects\CodingStudy\RandomNumber\bin\Debug\RandomNumber.dll
 D:\CodingProjects\CodingStudy\RandomNumber\bin\Debug\RandomNumber.pdb
 D:\CodingProjects\CodingStudy\RandomNumber\obj\Debug\RandomNumber.dll
 D:\CodingProjects\CodingStudy\RandomNumber\obj\Debug\RandomNumber.pdb
+D:\1_Code\CodeStudy\RandomNumber\bin\Debug\RandomNumber.dll
+D:\1_Code\CodeStudy\RandomNumber\bin\Debug\RandomNumber.pdb
+D:\1_Code\CodeStudy\RandomNumber\obj\Debug\RandomNumber.dll
+D:\1_Code\CodeStudy\RandomNumber\obj\Debug\RandomNumber.pdb
